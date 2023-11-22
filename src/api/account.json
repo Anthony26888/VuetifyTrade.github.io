@@ -1,5 +1,13 @@
 {
-    "account": [
-  
-    ]
+  "account": [
+    {
+      "email": "haidang11111995@gmail.com",
+      "password": "haidang007",
+      "money": 0,
+      "position": "[]",
+      "openorder": "[]",
+      "history": "[]",
+      "id": 1
+    }
+  ]
 }

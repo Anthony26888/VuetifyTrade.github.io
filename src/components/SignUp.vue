@@ -4,33 +4,45 @@
       <VCol cols="8"></VCol>
       <VCol cols="4">
         <h2 class="text-blue text-center mx-auto">Sign Up</h2>
-        <VForm v-model="valid" ref="form" lazy-validation>
-          <VTextField
-            label="Email"
-            v-model="email"
-            :rules="emailRules"
-            required
-          ></VTextField>
-          <VTextField
-            label="Password"
-            v-model="password"
-            :rules="passRules"
-            required
-          ></VTextField>
-          <VTextField
-            label="Re-Password"
-            v-model="repass"
-            :rules="repassRules"
-            required
-          ></VTextField>
-          <VBtn @click="submit" class="w-100 bg-blue"> Log In </VBtn>
-          <div class="d-flex justify-content-center mt-3">
-            <span class="text-muted">Go back</span>
-            <router-link to="/SignUp" class="ms-2">Log In</router-link>
+        <form action="" @submit.prevent="SignUp">
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="email" required>
+            <label for="floatingInput">Email address</label>
           </div>
-        </VForm>
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password" required>
+            <label for="floatingPassword">Password</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="repass" required>
+            <label for="floatingPassword">Re-Password</label>
+          </div>
+          <VBtn type="submit" color="primary" class="w-100">Sign Up</VBtn>
+          <div class="d-flex justify-content-center mt-3">
+            <span class="text-muted">Go back to </span>
+            <router-link to="/LogIn" class="ms-2">Login</router-link>
+          </div>
+        </form>        
       </VCol>
     </VRow>
+    <div class="position-absolute bottom-0 end-0">
+      <v-alert  
+        type="success"           
+        border="start"
+        v-show="success"
+      >
+        Sign Up success
+      </v-alert>
+
+      <v-alert          
+        type="error"
+        prominent
+        border="start"
+        v-show="error"
+      >
+        Re-Password is different
+      </v-alert>
+    </div>
   </vContainer>
 </template>
 
@@ -39,32 +51,16 @@ import axios from "axios";
 
 export default {
   data: () => ({
-    valid: true,
-
-    email: "",
-    emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) =>
-        /^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$/.test(v) ||
-        "E-mail must be valid",
-    ],
-
-    password: "",
-    passRules: [
-      (v) => !!v || "Password is required",
-      (v) =>
-        /^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$/.test(v) ||
-        "Password must be valid",
-    ],
-
+    email: "",  
+    password: "", 
     repass: "",
-    repassRules:"Re-Password is different",
+    success : false,
+    error:false
   }),
 
   methods: {
-    submit() {
-      if (this.$refs.form.validate()) {
-        // Native form submission is not yet supported
+    SignUp() {
+      if(this.password == this.repass){
         axios.post("http://localhost:3000/account", {          
           email: this.email,
           password: this.password,
@@ -72,8 +68,11 @@ export default {
           position:"[]",
           openorder:"[]",
           history:"[]"
-
-        });
+        }),
+        this.success=true 
+        set     
+      }else{
+        this.error=true
       }
     },
     clear() {

@@ -1,30 +1,38 @@
 <template>
   <vContainer class="mt-5">
     <VRow>
-      <VCol cols="8"></VCol>
+      <VCol cols="8">
+        <h1 class="animate__animated animate__bounce animate__repeat-2">An animated element</h1>
+      </VCol>
       <VCol cols="4">
         <h2 class="text-blue text-center mx-auto">Welcome</h2>
-        <VForm v-model="valid" ref="form" lazy-validation>
-          <VTextField
-            label="Email"
-            v-model="email"
-            :rules="emailRules"
-            required
-          ></VTextField>
-          <VTextField
-            label="Password"
-            v-model="password"
-            :rules="passRules"
-            required
-          ></VTextField>
-          <VBtn @click="submit" class="w-100 bg-blue"> Log In </VBtn>
-          <div class="d-flex justify-content-center mt-3">
-            <span class="text-muted">Don't have an account</span>
-            <router-link to="/SignUp" class="ms-2">Sign up now</router-link>
+        <form action="" @submit.prevent="Login">
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="email" required>
+            <label for="floatingInput">Email address</label>
           </div>
-        </VForm>
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password" required>
+            <label for="floatingPassword">Password</label>
+          </div>        
+          <VBtn type="submit" color="primary" class="w-100">Log In</VBtn>
+          <div class="d-flex justify-content-center mt-3">
+            <span class="text-muted">Don't have account? </span>
+            <router-link to="/SignUp" class="ms-2">Sign Up</router-link>
+          </div>
+        </form>  
       </VCol>
     </VRow>
+    <div class="position-absolute bottom-0 end-0">
+      <v-alert          
+        type="error"
+        prominent
+        border="start"
+        v-show="error"
+      >
+        Email or Password is not correct
+      </v-alert>
+    </div>
   </vContainer>
 </template>
 
@@ -33,40 +41,33 @@ import axios from "axios";
 
 export default {
   data: () => ({
-    valid: true,
-
-    email: "",
-    emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) =>
-        /^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$/.test(v) ||
-        "E-mail must be valid",
-    ],
-
-    password: "",
-    passRules: [
-      (v) => !!v || "Password is required",
-      (v) =>
-        /^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$/.test(v) ||
-        "Password must be valid",
-    ],
+    email: "",    
+    password: "", 
+    error:false,   
   }),
 
   methods: {
-    submit() {
-      if (this.$refs.form.validate()) {
-        // Native form submission is not yet supported
-        axios.post("/api/submit", {
-          name: this.name,
-          email: this.email,
-          select: this.select,
-          checkbox: this.checkbox,
-        });
-      }
+    Login() {
+      const url = "http://localhost:3000/account"
+      axios
+      .get(url)
+      .then((response) => {
+        const dataAccount = response.data;
+        const user = dataAccount.find(
+          (u) => u.email == this.email && u.password == this.password
+        );
+        if (user) {
+          this.$router.push("/Trading");
+          localStorage.setItem("user", this.email);          
+        } else {
+          this.error = true;
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding item:", error);
+      });
     },
-    clear() {
-      this.$refs.form.reset();
-    },
+    
   },
 };
 </script>

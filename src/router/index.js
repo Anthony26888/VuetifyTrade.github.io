@@ -22,6 +22,7 @@ const routes = [
         component: () => import('@/views/SignUp.vue'),
       },
     ],
+    
   },
 ]
 
