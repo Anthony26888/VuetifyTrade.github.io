@@ -17,6 +17,7 @@
     "bootstrap-vue": "^2.23.1",
     "core-js": "^3.29.0",
     "roboto-fontface": "*",
+    "trading-vue-js": "^1.0.2",
     "vue": "^3.2.0",
     "vue-router": "^4.0.0"
   },

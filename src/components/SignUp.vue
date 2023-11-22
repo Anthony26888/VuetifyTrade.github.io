@@ -75,9 +75,7 @@ export default {
         this.error=true
       }
     },
-    clear() {
-      this.$refs.form.reset();
-    },
+    
   },
 };
 </script>

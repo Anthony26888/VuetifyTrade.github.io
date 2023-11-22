@@ -22,8 +22,18 @@ const routes = [
         component: () => import('@/views/SignUp.vue'),
       },
     ],
-    
   },
+  {
+    path: '/Trading',
+    component: () => import('@/layouts/trading/Default.vue'),
+    children: [
+      {
+        path: '',
+        name: 'Home',
+        component: () => import('@/views/Trading.vue'),
+      }
+    ],
+  }
 ]
 
 const router = createRouter({
