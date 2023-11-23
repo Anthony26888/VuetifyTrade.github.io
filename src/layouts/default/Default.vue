@@ -1,5 +1,4 @@
-<template>
-  
+<template>  
   <v-app>
     <default-bar />
     <default-view />

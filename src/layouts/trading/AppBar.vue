@@ -2,7 +2,9 @@
   <v-toolbar color="light">
     <div class="d-flex">
       <v-img src="../../assets/img/logo-eagle.png" :width="32"></v-img>
-      <h3 class="text-blue-lighten-1 ms-2">Eagle Base</h3>
+      <router-link to="/" style="text-decoration: none">
+        <h3 class="text-blue-lighten-1 ms-2">Eagle Base</h3>
+      </router-link>
     </div>
         
     <v-spacer></v-spacer>
