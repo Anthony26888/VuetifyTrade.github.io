@@ -1,31 +1,59 @@
 <template lang="">
-  <div class="tv_chart_container ms-2"  id="tradingview-widget-container"></div>
+  <div class="tv_chart_container ms-2" ref="chartContainer"></div>
 </template>
 <script>
-export default { 
-  mounted() {   
-    this.Chart()
+import { createChart } from "lightweight-charts";
+import axios from "axios";
+export default {
+  methods: {
+    data() {
+      return {
+        candleSeries: null,
+      };
+    },
+  },
+
+  mounted() {
+    const chart = createChart(this.$refs.chartContainer, {
+      width: 800,
+      height: 400,
+    });
+
+    this.candleSeries = chart.addCandlestickSeries({
+      upColor: "green", // Color for bullish candles
+      downColor: "red", // Color for bearish candles
+      borderDownColor: "red", // Border color for bearish candles
+      borderUpColor: "green", // Border color for bullish candles
+      wickDownColor: "red", // Wick color for bearish candles
+      wickUpColor: "green", // Wick color for bullish candles
+    });
+
+    this.fetchData(); // Initial data fetch
+    setInterval(this.fetchData, 1000); // Fetch new data every minute (adjust interval as needed)
   },
   methods: {
+    fetchData() {
+      const Coin = localStorage.getItem("SelectCoin")
+      axios
+        .get(`https://api.binance.com/api/v1/klines?symbol=${Coin}&interval=1h`)
+        .then((response) => {
+          const data = response.data.map((item) => {
+            const [time, open, high, low, close] = item;
+            return {
+              time: time,
+              open: parseFloat(open),
+              high: parseFloat(high),
+              low: parseFloat(low),
+              close: parseFloat(close),
+            };
+          });
 
-    Chart(){
-      const select = localStorage.getItem("SelectCoin")
-      const Coins = `BINANCE:${select}`
-      new TradingView.widget({
-        "autosize": true,
-        "width": "100%",
-        "symbol": `${Coins}`,
-        "interval": "60",
-        "timezone": "Asia/Ho_Chi_Minh",
-        "theme": "light",
-        "style": "1",
-        "locale": "en",
-        "enable_publishing": false,
-        "gridColor": "rgba(216, 216, 216, 0.06)",
-        "save_image": false,
-        "container_id": 'tradingview-widget-container',
-      });
-    }
+          this.candleSeries.setData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching Binance data:", error);
+        });
+    },
   },
 };
 </script>
@@ -64,7 +92,6 @@ export default {
   .tv_chart_container {
     height: 350px;
   }
-
 }
 
 @media only screen and (min-width: 1350px) {
@@ -83,6 +110,5 @@ export default {
   .tv_chart_container {
     height: 650px;
   }
-
 }
 </style>
