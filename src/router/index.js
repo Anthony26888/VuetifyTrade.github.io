@@ -29,7 +29,7 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'Home',
+        name: 'Trading',
         component: () => import('@/views/Trading.vue'),
       }
     ],

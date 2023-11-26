@@ -1,18 +1,16 @@
 <template lang="">
-  <vContainer>
-    <div class="tv_chart_container"  id="tradingview-widget-container"></div>
-  </vContainer>
+  <div class="tv_chart_container ms-2"  id="tradingview-widget-container"></div>
 </template>
 <script>
-export default {
-  mounted() {
+export default { 
+  mounted() {   
     this.Chart()
-    
   },
   methods: {
-    
+
     Chart(){
-      const Coins = "BINANCE:BTCUSDT"
+      const select = localStorage.getItem("SelectCoin")
+      const Coins = `BINANCE:${select}`
       new TradingView.widget({
         "autosize": true,
         "width": "100%",
