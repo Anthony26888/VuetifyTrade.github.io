@@ -1,58 +1,37 @@
 <template lang="">
-  <div class="tv_chart_container ms-2" ref="chartContainer"></div>
+  <div class="tv_chart_container ms-2" id="tradingview-widget-container"></div>
 </template>
 <script>
-import { createChart } from "lightweight-charts";
-import axios from "axios";
 export default {
   methods: {
     data() {
-      return {
-        candleSeries: null,
+      return {       
+        selectedSymbol: 'BTCUSDT',
+        widget: null,
       };
     },
   },
 
   mounted() {
-    const chart = createChart(this.$refs.chartContainer, {
-      width: 800,
-      height: 400,
-    });
-
-    this.candleSeries = chart.addCandlestickSeries({
-      upColor: "green", // Color for bullish candles
-      downColor: "red", // Color for bearish candles
-      borderDownColor: "red", // Border color for bearish candles
-      borderUpColor: "green", // Border color for bullish candles
-      wickDownColor: "red", // Wick color for bearish candles
-      wickUpColor: "green", // Wick color for bullish candles
-    });
-
-    this.fetchData(); // Initial data fetch
-    setInterval(this.fetchData, 1000); // Fetch new data every minute (adjust interval as needed)
+    this.initTradingViewWidget();
   },
   methods: {
-    fetchData() {
-      const Coin = localStorage.getItem("SelectCoin")
-      axios
-        .get(`https://api.binance.com/api/v1/klines?symbol=${Coin}&interval=1h`)
-        .then((response) => {
-          const data = response.data.map((item) => {
-            const [time, open, high, low, close] = item;
-            return {
-              time: time,
-              open: parseFloat(open),
-              high: parseFloat(high),
-              low: parseFloat(low),
-              close: parseFloat(close),
-            };
-          });
-
-          this.candleSeries.setData(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching Binance data:", error);
-        });
+    initTradingViewWidget() {
+      const coin = "BTCUSDT";
+      this.widget = new TradingView.widget({
+        symbol: this.selectedSymbol, // Set the initial trading pair or symbol
+        interval: "H", // Set the initial interval (D for daily, 1 for 1 minute, etc.)
+        timezone: "Asia/Ho_Chi_Minh",
+        theme: "light",
+        style: "1",
+        locale: "en",
+        enable_publishing: false,
+        hide_top_toolbar: true,
+        hide_legend: true,
+        allow_symbol_change: true,
+        autosize: true,
+        container_id: "tradingview-widget-container",
+      });
     },
   },
 };

@@ -19,9 +19,6 @@
   </v-sheet>
   <BinanceApi @InfoCoins="FetchInfo" />
 </template>
-<script setup>
-import BinanceApi from "./Fetch api/FetchBinance.vue";
-</script>
 <script>
 export default {
   data() {

@@ -4,7 +4,7 @@
     <div class="col-12">
       <InfoCoins/>
     </div>
-    <div class="col-7">      
+    <div class="col-8">      
       <Chart/>
     </div>
     <div class="col">Column</div>
